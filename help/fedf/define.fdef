@@ -1,0 +1,124 @@
+
+#  ***** R34 *****
+AtomType Ring3 [r3]
+AtomType Ring4 [r4,!R1&r3]
+DefineFeature R3 [{Ring3}]1@[{Ring3}]@[{Ring3}]1
+  Family R34
+  Weights 1.0,1.0,1.0
+EndFeature
+DefineFeature R4 [{Ring4}]1@[{Ring4}]@[{Ring4}]@[{Ring4}]1
+  Family R34
+  Weights 1.0,1.0,1.0,1.0
+EndFeature
+
+#  ***** R78 *****
+AtomType Ring7 [r7,!R1&r6,!R1&r5,!R1&r4,!R1&r3]
+AtomType Ring8 [r8,!R1&r7,!R1&r6,!R1&r5,!R1&r4,!R1&r3]
+DefineFeature R7 [{Ring7}]1@[{Ring7}]@[{Ring7}]@[{Ring7}]@[{Ring7}]@[{Ring7}]@[{Ring7}]1
+  Family R78
+  Weights 1.0,1.0,1.0,1.0,1.0,1.0,1.0
+EndFeature
+DefineFeature R8 [{Ring8}]1@[{Ring8}]@[{Ring8}]@[{Ring8}]@[{Ring8}]@[{Ring8}]@[{Ring8}]@[{Ring8}]1
+  Family R78
+  Weights 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+EndFeature
+
+#  ***** R56 *****
+AtomType Ring5 [r5,!R1&r4,!R1&r3]
+AtomType Ring6 [r6,!R1&r5,!R1&r4,!R1&r3]
+
+DefineFeature Aliphatic5 [{Ring5}]1@[{Ring5}]@[{Ring5}]@[{Ring5}]@[{Ring5}]1
+  Family R5
+  Weights 1.0,1.0,1.0,1.0,1.0
+EndFeature
+
+DefineFeature Aliphatic6 [{Ring6}]1@[{Ring6}]@[{Ring6}]@[{Ring6}]@[{Ring6}]@[{Ring6}]1
+  Family R6
+  Weights 1.0,1.0,1.0,1.0,1.0,1.0
+EndFeature
+
+#  ***** Aromatic *****
+DefineFeature Arom3 a1aa1
+  Family Aromatic_1
+  Weights 1.0,1.0,1.0
+EndFeature
+DefineFeature Arom4 a1aaa1
+  Family Aromatic_1
+  Weights 1.0,1.0,1.0,1.0
+EndFeature
+DefineFeature Arom5 a1aaaa1
+  Family Aromatic_1
+  Weights 1.0,1.0,1.0,1.0,1.0
+EndFeature
+DefineFeature Arom6 a1aaaaa1
+  Family Aromatic_1
+  Weights 1.0,1.0,1.0,1.0,1.0,1.0
+EndFeature
+DefineFeature Arom7 a1aaaaaa1
+  Family Aromatic_1
+  Weights 1.0,1.0,1.0,1.0,1.0,1.0,1.0
+EndFeature
+
+#  ***** Aromatic8910 *****
+DefineFeature Arom8_55 a1aaaaaaa1
+  Family Aromatic_2
+  Weights 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+EndFeature
+DefineFeature Arom9_56 a1aaaaaaaa1
+  Family Aromatic_2
+  Weights 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+EndFeature
+DefineFeature Arom10_66 a1aaaaaaaaa1
+  Family Aromatic_2
+  Weights 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+EndFeature
+
+
+AtomType RingAtom [R]
+#  ***** Donor *****
+AtomType NDonor [N&!H0&v3,N&!H0&+1&v4,n&H1&+0]
+AtomType NDonor [$([Nv3](-C)(-C)-C)]
+AtomType NDonor [$(n[n;H1]),$(nc[n;H1])]
+
+# AtomType ChalcDonor [O,S;H1;+0]
+AtomType AmideN [$(N-C(=O))]
+# AtomType SulfonamideN [$([N;H0]S(=O)(=O))]
+
+#  ***** Acceptor *****
+AtomType NAcceptor [$([N&v3;H1,H2]-[!$(*=[O,N,P,S])])]
+Atomtype NAcceptor [$([N;v3;H0])]
+AtomType NAcceptor [$([n;+0])]
+# AtomType Hydroxyl [O;H1;v2]
+# AtomType ChalcAcceptor [$([O,S;H1;v2]-[!$(*=[O,N,P,S])])]
+AtomType ChalcAcceptor [O,S;H0;v2]
+# Atomtype ChalcAcceptor [O,S;-]
+Atomtype ChalcAcceptor [o,s;+0]
+
+# F is an acceptor so long as the C has no other halogen neighbors. This is maybe
+# a bit too general, but the idea is to eliminate things like CF3
+AtomType HalogenAcceptor [F;$(F-[#6]);!$(FC[F,Cl,Br,I])]
+
+DefineFeature SingleAtom [{NDonor},{NAcceptor},{ChalcAcceptor},{HalogenAcceptor};!{RingAtom}]
+  Family Hydrophilic
+  Weights 1
+EndFeature
+
+
+# DefineFeature SingleAtomDonor [{NDonor},{ChalcDonor},{AmideN},{NAcceptor};!{RingAtom}]
+#   Family Hydrophilic
+#   Weights 1
+# EndFeature
+
+
+# H_acceptor = Chem.MolFromSmarts('[!$([#6,F,Cl,Br,I,o,s,nX3,#7v5,#15v5,#16v4,#16v6,*+1,*+2,*+3])]')
+# from https://github.com/rinikerlab/mdfptools/blob/master/tutorials_mdfp/ex2_compose_mdfp/ComposerGmx.py
+# H_donor = Chem.MolFromSmarts('[!H0;#7,#8,#9,#16]')
+
+# F is an acceptor so long as the C has no other halogen neighbors.
+# This is maybe a bit too general, but the idea is to eliminate things like CF3
+AtomType HalogenAcceptor [F,Cl,Br;$(F-[#6]);!$(FC[F,Cl,Br,I])]
+# DefineFeature SingleAtomAcceptor [{ChalcAcceptor},{NAcceptor},{HalogenAcceptor};!{RingAtom}]
+#   Family Hydrophilic
+#   Weights 1
+# EndFeature
+# todo Hydrophilic改为环外杂原子, 区分吸电子、给电子  F原子？
