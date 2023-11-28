@@ -23,12 +23,12 @@ def search_pharma(lines, vocab, type="topo&distance"):
             raise Exception(error)
     return result
 
-def search_mol(num_cpu, vocab, col_type="topo&distance", path="data/irg1_chembl/search/VAL163_validation.csv"):
+def search_mol(num_cpu, vocab, col_type="topo&distance", path="data/search/VAL163_validation.csv"):
     from multiprocessing import Pool, cpu_count
     ncpu = min(cpu_count(), max(num_cpu, 1))
     p = Pool(ncpu)
     # suppl = Chem.SmilesMolSupplier('data/zinc_druglike.smi', smilesColumn=0, titleLine=False, nameColumn=False)
-    with open('data/chembl31_druglike.smi', 'rt') as f:      # data/irg1_chembl/validation_dataset.smi   data/chembl31_druglike.smi
+    with open('data/chembl31_druglike.smi', 'rt') as f:
         mols_text = f.readlines()
     batch_size = len(mols_text) // ncpu + 1
     batches = [mols_text[i: i + batch_size] for i in range(0, len(mols_text), batch_size)]
@@ -41,15 +41,11 @@ def search_mol(num_cpu, vocab, col_type="topo&distance", path="data/irg1_chembl/
         # sys.stderr.flush()
     print()
     print(f"collect {len(result)} frags")
-
-    # mid = pd.DataFrame.from_dict(result, orient='index', columns=['hash', 'ori_smi'])
-    # mid = mid.reset_index().rename(columns={'index': 'frag_smi'})
-    # mid.to_csv("data/irg1_chembl/search/xp_VAL163_validation2.csv", header=False, index=False)    # xp_VAL163_nodis_search_chembl2.csv
-    with open(path, 'wt') as f:   # xp_VAL163_search_chembl
-        f.write('\n'.join([line for line in result]))  # ring_sum.keys()
+    with open(path, 'wt') as f:
+        f.write('\n'.join([line for line in result]))
     return 0
 
-def vocab_diameter(df, col_type="topo&distance"):
+def vocab_diameter(df):
 
     vocab_dia = dict()
     for index, row in df.iterrows():
@@ -67,8 +63,8 @@ def vocab_diameter(df, col_type="topo&distance"):
 
 if __name__ == '__main__':
 
-    df = pd.read_csv("data/irg1_chembl/xp_VAL163.csv")
+    df = pd.read_csv("data/xp_VAL163.csv")
     print("Searching under topo&distance constraints")
-    vocab = vocab_diameter(df, col_type="topo&distance")
-    a = search_mol(60, vocab, col_type="topo&distance", path="data/irg1_chembl/search/VAL163_search_chembl.csv")
+    vocab = vocab_diameter(df)
+    a = search_mol(60, vocab, col_type="topo&distance", path="data/search/new_search.csv")
 

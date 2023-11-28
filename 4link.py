@@ -74,16 +74,9 @@ def delete_attachment_m2(smi):
     return list(new_mol)
 
 
-def load_remain(remain="data/irg1_chembl/search/remain_frag.smi"):
-    with open(remain, 'rt') as f:
-        mols = f.readlines()
-    mol = [m.strip("*\n") for m in mols]
-    return mol
-
 def create_newmols(fragments):
     import traceback
     child_set = set()
-    # chains = load_remain()
     chains = ['COc1nc[nH]c1']  # CC(=O)Nc1nc[nH]n1  CC(=O)Nc1nc[nH]c1
     for smile in tqdm(fragments, desc="crossover  "):
         connect = smile.count("*")
@@ -255,44 +248,8 @@ def simplify_component(component):
 if __name__ == '__main__':
 
     tqdm.pandas(desc='pandas bar |   ')
-    new_df = pd.read_csv("data/irg1_chembl/xp_VAL163.csv")
-
-    """
-    search = pd.read_csv("data/irg1_chembl/search/VAL163_search_chembl.csv", header=None,
-                         names=["smi", "hash", "ori_smi"])
-
-    search_group = search.groupby("hash")
-    sitedf = new_df.reset_index(drop=True)
-    site_group = sitedf.groupby("hash_distance")
-
-    new_search = pd.DataFrame()
-    recover = pd.DataFrame()
-    for group in search_group:
-        g = list(group)
-        name = g[0]
-        df = g[1].drop_duplicates(subset=["smi"], keep="first", inplace=False).copy()
-        seed_df = sitedf.iloc[site_group.groups[name].tolist()].copy()
-        seed_smi = seed_df["smi"].values.tolist()
-        df["save"] = df["smi"].apply(lambda smi: 1 if smi not in seed_smi else 0)
-        cur_df = df[df["save"] == 1].copy()
-        cur_recover = df[df["save"] == 0].copy()
-        new_search = pd.concat([new_search, cur_df])
-        recover = pd.concat([recover, cur_recover])
-
-    # df = pd.read_csv("data/irg1_zinc/ps/xp_VAL163_below9_search_zinc_link.smi", header=None, names=["smi", "hash"])
-    # df["mol_object"] = df["smi"].apply(Chem.MolFromSmiles)
-    # PandasTools.WriteSDF(df, "data/irg1_zinc/ps/xp_VAL163_below9_search_zinc_link.sdf", molColName="mol_object", properties=["hash", "smi"])
-
-
-    search_hash = new_search.value_counts(subset=["hash"])
-    search_hash = search_hash.reset_index().rename(columns={'index': 'hash'})
-    search_hash.rename(columns={0: "occurence"}, inplace=True)
-
-    comp2_dict = creat_dict(new_df, key="hash_distance", val="comp2")
-    search_hash["comp2"] = search_hash["hash"].progress_apply(lambda x: comp2_dict[x])
-    """
-
-    new_search = pd.read_csv("data/irg1_chembl/search/new_search.csv")
+    new_df = pd.read_csv("data/xp_VAL163.csv")
+    new_search = pd.read_csv("data/search/new_search.csv")
     comp2_dict = creat_dict(new_df, key="hash_distance", val="comp2")
     new_search["comp2"] = new_search["hash"].progress_apply(lambda x: comp2_dict[x])
 
@@ -317,18 +274,3 @@ if __name__ == '__main__':
     mols4.drop_duplicates(subset=["smi"], keep="first", inplace=True)
     mols4_text = mols4["smi"].values.tolist()
     c = link(60, mols4_text, "R5R5")
-
-
-    """
-    df = PandasTools.LoadSDF("data/irg1_chembl/xp_VAL163_remain.sdf", molColName='mol_object', removeHs=True)
-    smi_set = set()
-    # for smile in df["smi"].values.tolist():
-    for smile in r5r5["remain_smi"].values.tolist():
-        if type(smile) != str:
-            continue
-        smis = one_attachment(smile)
-        smi_set.update(set(smis))
-        
-    with open("data/irg1_chembl/search/remain_frag.smi", 'wt') as f:         # r'E:\database\fda_ring.smi'
-        f.write('\n'.join([line for line in smi_set]))
-    """

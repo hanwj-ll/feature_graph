@@ -25,10 +25,10 @@ if __name__ == '__main__':
     # collect frag to sdf
     count1 = 0
     count2 = 0
-    poc = load_rec("data/irg1_chembl/6R6U_-_preprocessed.pdb")
-    suppl = Chem.SDMolSupplier("data/irg1_chembl/xp.sdf", removeHs=True)
-    writer = Chem.SDWriter('data/irg1_chembl/xp_VAL163.sdf')
-    writer2 = Chem.SDWriter('data/irg1_chembl/xp_VAL163_remain.sdf')
+    poc = load_rec("data/6R6U_-_preprocessed.pdb")
+    suppl = Chem.SDMolSupplier("data/xp.sdf", removeHs=True)
+    writer = Chem.SDWriter('data/xp_VAL163.sdf')
+    writer2 = Chem.SDWriter('data/xp_VAL163_remain.sdf')
     for mol in tqdm(suppl, desc="process mol "):
         if mol is None:
             continue
