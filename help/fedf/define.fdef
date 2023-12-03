@@ -121,4 +121,3 @@ AtomType HalogenAcceptor [F,Cl,Br;$(F-[#6]);!$(FC[F,Cl,Br,I])]
 #   Family Hydrophilic
 #   Weights 1
 # EndFeature
-# todo Hydrophilic改为环外杂原子, 区分吸电子、给电子  F原子？
