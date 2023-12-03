@@ -79,45 +79,17 @@ AtomType RingAtom [R]
 AtomType NDonor [N&!H0&v3,N&!H0&+1&v4,n&H1&+0]
 AtomType NDonor [$([Nv3](-C)(-C)-C)]
 AtomType NDonor [$(n[n;H1]),$(nc[n;H1])]
-
-# AtomType ChalcDonor [O,S;H1;+0]
 AtomType AmideN [$(N-C(=O))]
-# AtomType SulfonamideN [$([N;H0]S(=O)(=O))]
 
 #  ***** Acceptor *****
 AtomType NAcceptor [$([N&v3;H1,H2]-[!$(*=[O,N,P,S])])]
 Atomtype NAcceptor [$([N;v3;H0])]
 AtomType NAcceptor [$([n;+0])]
-# AtomType Hydroxyl [O;H1;v2]
-# AtomType ChalcAcceptor [$([O,S;H1;v2]-[!$(*=[O,N,P,S])])]
 AtomType ChalcAcceptor [O,S;H0;v2]
-# Atomtype ChalcAcceptor [O,S;-]
 Atomtype ChalcAcceptor [o,s;+0]
-
-# F is an acceptor so long as the C has no other halogen neighbors. This is maybe
-# a bit too general, but the idea is to eliminate things like CF3
 AtomType HalogenAcceptor [F;$(F-[#6]);!$(FC[F,Cl,Br,I])]
 
 DefineFeature SingleAtom [{NDonor},{NAcceptor},{ChalcAcceptor},{HalogenAcceptor};!{RingAtom}]
   Family Hydrophilic
   Weights 1
 EndFeature
-
-
-# DefineFeature SingleAtomDonor [{NDonor},{ChalcDonor},{AmideN},{NAcceptor};!{RingAtom}]
-#   Family Hydrophilic
-#   Weights 1
-# EndFeature
-
-
-# H_acceptor = Chem.MolFromSmarts('[!$([#6,F,Cl,Br,I,o,s,nX3,#7v5,#15v5,#16v4,#16v6,*+1,*+2,*+3])]')
-# from https://github.com/rinikerlab/mdfptools/blob/master/tutorials_mdfp/ex2_compose_mdfp/ComposerGmx.py
-# H_donor = Chem.MolFromSmarts('[!H0;#7,#8,#9,#16]')
-
-# F is an acceptor so long as the C has no other halogen neighbors.
-# This is maybe a bit too general, but the idea is to eliminate things like CF3
-AtomType HalogenAcceptor [F,Cl,Br;$(F-[#6]);!$(FC[F,Cl,Br,I])]
-# DefineFeature SingleAtomAcceptor [{ChalcAcceptor},{NAcceptor},{HalogenAcceptor};!{RingAtom}]
-#   Family Hydrophilic
-#   Weights 1
-# EndFeature
