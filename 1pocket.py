@@ -7,7 +7,7 @@ from rdkit import rdBase
 rdBase.DisableLog('rdApp.error')
 
 
-def load_rec(path="6R6U_-_preprocessed.pdb"):
+def load_rec(path="IRG1.pdb"):
     t = md.load_pdb(path)
     cor = t.xyz * 10
     top = t.topology
@@ -20,15 +20,12 @@ def load_rec(path="6R6U_-_preprocessed.pdb"):
 
 
 if __name__ == '__main__':
-    # mol = Chem.MolFromSmiles("CS(=O)(c1ccc(NC(CCN2C(NC3(CCCC3)C2=O)=O)=O)cc1)=O")
-    # suppl = Chem.SDMolSupplier("data/irg1_chembl/chembl_536944.sdf", removeHs=True)
-    # collect frag to sdf
     count1 = 0
     count2 = 0
-    poc = load_rec("data/6R6U_-_preprocessed.pdb")
-    suppl = Chem.SDMolSupplier("data/xp.sdf", removeHs=True)
-    writer = Chem.SDWriter('data/xp_VAL163.sdf')
-    writer2 = Chem.SDWriter('data/xp_VAL163_remain.sdf')
+    poc = load_rec("data/IRG1.pdb")
+    suppl = Chem.SDMolSupplier("data/candidate_compounds.sdf", removeHs=True)
+    writer = Chem.SDWriter('data/seed_fragment.sdf')
+    writer2 = Chem.SDWriter('data/other.sdf')
     for mol in tqdm(suppl, desc="process mol "):
         if mol is None:
             continue
@@ -52,6 +49,6 @@ if __name__ == '__main__':
                 except Exception as e:
                     print(e)
 
-    print(f"收集{count1} 个V163片段, {count2}个remain片段")
+    print(f"收集{count1} 个seed片段, {count2}个other片段")
     writer.close()
     writer2.close()

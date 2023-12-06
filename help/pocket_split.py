@@ -445,7 +445,7 @@ if __name__ == '__main__':
 
     # one molecule test
     mol = Chem.SDMolSupplier("data/irg1_chembl/chembl_549986.sdf", removeHs=True)[0]
-    poc = load_rec("data/irg1_chembl/6R6U_-_preprocessed.pdb")
+    poc = load_rec("data/irg1_chembl/IRG1.pdb")
     anchor_atom_id = anchor_search(mol, poc)
     show_mol(mol).show()  # 会抹除对接构象
     frag, smi, frag_id = partial_collect(mol, poc)
